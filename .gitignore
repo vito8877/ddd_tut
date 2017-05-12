@@ -13,3 +13,5 @@ gen
 /tests/_output/
 /tests/_support/_generated/
 /vendor/
+/config/db_mysql_local.php
+/data/
