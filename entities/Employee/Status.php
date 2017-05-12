@@ -10,8 +10,9 @@ namespace app\entities\Employee;
 
 
 use Assert\Assertion;
+use yii\db\ActiveRecord;
 
-class Status
+class Status extends ActiveRecord
 {
     const ACTIVE   = 'active';
     const ARCHIVED = 'archived';
@@ -64,5 +65,9 @@ class Status
         return $this->date;
     }
 
-
+    ############INFRASTRUCTURE#########
+    public static function tableName()
+    {
+        return '{{$ar_status}}';
+    }
 }

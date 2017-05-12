@@ -10,8 +10,9 @@ namespace app\entities\Employee;
 
 
 use Assert\Assertion;
+use yii\db\ActiveRecord;
 
-class Phone
+class Phone extends ActiveRecord
 {
     private $country;
     private $code;
@@ -62,5 +63,9 @@ class Phone
         return $this->number;
     }
 
-
+############INFRASTRUCTURE#########
+    public static function tableName()
+    {
+        return '{{$ar_phone}}';
+    }
 }
