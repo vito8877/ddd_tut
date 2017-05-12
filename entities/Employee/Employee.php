@@ -143,7 +143,7 @@ class Employee extends ActiveRecord implements AggregateRoot
     ############INFRASTRUCTURE#########
     public static function tableName()
     {
-        return '{{$ar_employees}}';
+        return '{{%ar_employees}}';
     }
 
     private static $_prototype;
