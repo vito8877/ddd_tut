@@ -12,9 +12,11 @@ require(__DIR__ . '/vendor/yiisoft/yii2/Yii.php');
 //Yii::setAlias('@app', dirname(__DIR__) . '/entities');
 //Yii::setAlias('@entities', dirname(__DIR__) . '/tests');
 
-$config = \yii\helpers\ArrayHelper::merge(
-    require(__DIR__ . '/config/web.php'),
-    require(__DIR__ . '/config/test.php')
-);
+//$config = \yii\helpers\ArrayHelper::merge(
+//    require(__DIR__ . '/config/web.php'),
+//    require(__DIR__ . '/config/test.php')
+//);
+
+$config = require(__DIR__ . '/config/web.php');
 
 (new yii\web\Application($config));
