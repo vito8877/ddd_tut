@@ -37,7 +37,7 @@ $config = [
                 ],
             ],
         ],
-        'db' => require(__DIR__ . '/db.php'),
+        'db' => require(__DIR__ . '/db_mysql_local.php'),
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
