@@ -10,6 +10,7 @@ namespace tests\unit\repositories;
 
 
 use app\entities\Employee\EmployeeId;
+use app\entities\Employee\Name;
 use app\entities\Employee\Phone;
 use app\entities\Employee\Status;
 use app\repositories\EmployeeRepository;
@@ -59,6 +60,40 @@ class BaseRepositoryTest extends Unit
         $this->checkStatuses($employee->getStatuses(), $found->getStatuses());
     }
 
+    public function testUpdate()
+    {
+        $employee = EmployeeBuilder::instance()->withPhones([
+            new Phone(7, '888', '0000001'),
+            new Phone(7, '888', '0000002'),
+        ])->build();
+
+        $this->repository->add($employee);
+        $edit = $this->repository->get($employee->getId());
+
+        $edit->rename($name = new Name('New', 'Test', 'Name'));
+        $edit->addPhone($phone = new Phone(7, '888', '0000003'));
+        $edit->archive(new \DateTimeImmutable());
+
+        $this->repository->save($edit);
+
+        $found = $this->repository->get($employee->getId());
+
+        $this->assertTrue($found->isArchived());
+        $this->assertEquals($name, $found->getName());
+
+        $this->checkPhones($edit->getPhones(), $found->getPhones());
+        $this->checkStatuses($edit->getStatuses(), $found->getStatuses());
+    }
+
+    public function testRemove()
+    {
+        $employee = EmployeeBuilder::instance()->withId(5)->build();
+        $this->repository->add($employee);
+        $this->repository->remove($employee);
+        $this->expectException(NotFoundException::class);
+        $this->repository->get(new EmployeeId(5));
+    }
+
     private function checkPhones(array $expected, array $actual)
     {
         $phoneData = function (Phone $phone) {
@@ -85,7 +120,4 @@ class BaseRepositoryTest extends Unit
             array_map($statusData, $actual)
         );
     }
-
-
-
 }
