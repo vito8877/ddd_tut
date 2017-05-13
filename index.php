@@ -1,11 +1,10 @@
 <?php
 
 require_once 'bootstrap.php';
+use app\entities\Employee\Employee;
 
 
 
-$employee = new \app\entities\Employee\Employee();
-
-var_dump($employee);
+var_dump(Employee::findOne(1));
 exit();
 
