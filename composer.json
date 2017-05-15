@@ -2,7 +2,8 @@
     "require": {
         "yiisoft/yii2": "2.0.11.2",
         "beberlei/assert": "^2.7",
-        "codeception/codeception": "^2.2"
+        "codeception/codeception": "^2.2",
+        "ramsey/uuid": "^3.6"
     },
     "require-dev": {
         "yiisoft/yii2-gii": "^2.0"
