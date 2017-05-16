@@ -18,6 +18,6 @@ class MemoryEmployeeRepositoryTest extends BaseRepositoryTest
 
     public function _before()
     {
-        $this->repository = new MemoryEmployeeREpository();
+        $this->repository = new MemoryEmployeeRepository();
     }
 }
