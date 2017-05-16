@@ -18,7 +18,7 @@ use app\repositories\NotFoundException;
 use Codeception\Test\Unit;
 use tests\unit\entities\Employee\EmployeeBuilder;
 
-class BaseRepositoryTest extends Unit
+abstract class BaseRepositoryTest extends Unit
 {
     /**
      * @var EmployeeRepository
