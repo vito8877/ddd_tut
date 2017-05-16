@@ -14,6 +14,7 @@ use app\entities\Employee\EmployeeId;
 use app\entities\Employee\Phone;
 use app\entities\Employee\Status;
 use yii\db\Connection;
+use yii\db\Query;
 
 class SqlEmployeeRepository implements EmployeeRepository
 {
@@ -38,7 +39,26 @@ class SqlEmployeeRepository implements EmployeeRepository
      */
     public function get(EmployeeId $id)
     {
-        // TODO: Implement get() method.
+        $employee = (new Query())->select('*')
+            ->from('{{%sql_employees}}')
+            ->andWhere(['id' => $id->getId()])
+            ->one($this->db);
+
+        if (!$employee) {
+            throw new NotFoundException('Employee not found');
+        }
+
+        $phones = (new Query())->select('*')
+            ->from('{{%sql_employee_phones}}')
+            ->andWhere(['employee_id' => $id->getId()])
+            ->orderBy('id')
+            ->all($this->db);
+
+        $statuses = (new Query())->select('*')
+            ->from('{{%sql_employee_statuses}}')
+            ->andWhere(['employee_id' => $id->getId()])
+            ->orderBy('id')
+            ->all($this->db);
     }
 
     /**
