@@ -9,6 +9,8 @@
 namespace tests\unit\repositories;
 
 
+use app\repositories\MemoryEmployeeRepository;
+
 class MemoryEmployeeRepositoryTest extends BaseRepositoryTest
 {
     /**
