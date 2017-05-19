@@ -12,11 +12,12 @@ namespace app\entities\Employee;
 use app\entities\AggregateRoot;
 use app\entities\EventTrait;
 use app\entities\Employee\Events\EmployeeCreated;
+use app\repositories\InstantiateTrait;
 use yii\db\ActiveRecord;
 
 class Employee extends ActiveRecord implements AggregateRoot
 {
-    use EventTrait;
+    use EventTrait, InstantiateTrait;
 
     private $id;
     private $name;
@@ -146,17 +147,6 @@ class Employee extends ActiveRecord implements AggregateRoot
         return '{{%ar_employees}}';
     }
 
-    private static $_prototype;
-    public static function instantiate($row)
-    {
-        if (self::$_prototype === null) {
-            $class = get_called_class();
-            self::$_prototype = unserialize(sprintf('O:%d:"%s":0:{}', strlen($class), $class));
-        }
-        $object = clone self::$_prototype;
-        $object->init();
-        return $object;
-    }
 
 
 }
