@@ -13,6 +13,7 @@ use app\entities\AggregateRoot;
 use app\entities\EventTrait;
 use app\entities\Employee\Events\EmployeeCreated;
 use app\repositories\InstantiateTrait;
+use lhs\Yii2SaveRelationsBehavior\SaveRelationsBehavior;
 use yii\db\ActiveRecord;
 
 class Employee extends ActiveRecord implements AggregateRoot
@@ -147,6 +148,84 @@ class Employee extends ActiveRecord implements AggregateRoot
         return '{{%ar_employees}}';
     }
 
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => SaveRelationsBehavior::class,
+                'relations' => ['relatedPhones', 'relatedStatuses'],
+            ]
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+
+    public function afterFind()
+    {
+        $this->id = new EmployeeId(
+            $this->getAttribute('employee_id')
+        );
+
+        $this->name = new Name(
+            $this->getAttribute('employee_name_last'),
+            $this->getAttribute('employee_name_first'),
+            $this->getAttribute('employee_name_middle')
+        );
+
+        $this->address = new Address(
+            $this->getAttribute('employee_address_country'),
+            $this->getAttribute('employee_address_region'),
+            $this->getAttribute('employee_address_city'),
+            $this->getAttribute('employee_address_street'),
+            $this->getAttribute('employee_address_house')
+        );
+
+        $this->createDate = new \DateTimeImmutable(
+            $this->getAttributeHint('employee_create_date')
+        );
+
+        $this->phones = new Phones($this->relatedPhones);
+        $this->statuses = $this->relatedStatuses;
+
+        parent::afterFind();
+    }
+
+    public function getRelatedPhones()
+    {
+        return $this->hasMany(Phone::class, ['phone_employee_id' => 'employee_id'])->orderBy('phone_id');
+    }
+
+    public function getRelatedStatuses()
+    {
+        return $this->hasMany(Status::class, ['status_employee_id' => 'employee_id'])->orderBy('status_id');
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->setAttribute('employee_id', $this->id->getId());
+
+        $this->setAttribute('employee_name_last', $this->name->getLast());
+        $this->setAttribute('employee_name_first', $this->name->getFirst());
+        $this->setAttribute('employee_name_middle', $this->name->getMIddle());
+
+        $this->setAttribute('employee_address_country', $this->address->getCountry());
+        $this->setAttribute('employee_address_region', $this->address->getRegion());
+        $this->setAttribute('employee_address_city', $this->address->getCity());
+        $this->setAttribute('employee_address_street', $this->address->getStreet());
+        $this->setAttribute('employee_address_house', $this->address->getHouse());
+
+        $this->setAttribute('employee_create_date', $this->getCreateDate()->format('Y-m-d H:i:s'));
+
+        $this->setAttribute('employee_current_status', $this->getCurrentStatus()->getValue());
+
+        return parent::beforeSave($insert);
+    }
 
 
 }
