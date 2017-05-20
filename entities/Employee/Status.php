@@ -9,11 +9,13 @@
 namespace app\entities\Employee;
 
 
+use app\repositories\InstantiateTrait;
 use Assert\Assertion;
 use yii\db\ActiveRecord;
 
 class Status extends ActiveRecord
 {
+    use InstantiateTrait;
     const ACTIVE   = 'active';
     const ARCHIVED = 'archived';
 
@@ -70,4 +72,22 @@ class Status extends ActiveRecord
     {
         return '{{$ar_status}}';
     }
+
+    public function afterFind()
+    {
+        $this->value = $this->getAttribute('status_value');
+        $this->date = new \DateTimeImmutable($this->getAttribute('status_date'));
+
+        parent::afterFind();
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->setAttribute('status_value', $this->value);
+        $this->setAttribute('status_date', $this->date->format('Y-m-d H:i:s'));
+
+        return parent::beforeSave($insert);
+    }
+
+
 }

@@ -9,11 +9,14 @@
 namespace app\entities\Employee;
 
 
+use app\repositories\InstantiateTrait;
 use Assert\Assertion;
 use yii\db\ActiveRecord;
 
 class Phone extends ActiveRecord
 {
+    use InstantiateTrait;
+
     private $country;
     private $code;
     private $number;
@@ -68,4 +71,24 @@ class Phone extends ActiveRecord
     {
         return '{{$ar_phone}}';
     }
+
+    public function afterFind()
+    {
+        $this->country = $this->getAttribute('phone_country');
+        $this->code = $this->getAttribute('phone_code');
+        $this->number = $this->getAttribute('phone_number');
+
+        parent::afterFind();
+    }
+
+    public function beforeSave($insert)
+    {
+        $this->setAttribute('phone_country', $this->country);
+        $this->setAttribute('phone_code', $this->code);
+        $this->setAttribute('phone_number', $this->number);
+
+        return parent::beforeSave($insert);
+    }
+
+
 }
