@@ -6,12 +6,13 @@
  * Time: 12:18
  */
 
-namespace app\tests\unit\repositories;
+namespace tests\unit\repositories;
 
 
 use app\repositories\AREmployeeRepository;
-use tests\unit\repositories\BaseRepositoryTest;
-use UnitTester;
+use app\tests\_fixtures\EmployeeFixture;
+use app\tests\_fixtures\EmployeePhoneFixture;
+use app\tests\_fixtures\EmployeeStatusFixture;
 
 class AREmployeeRepositoryTest extends BaseRepositoryTest
 {
@@ -20,9 +21,9 @@ class AREmployeeRepositoryTest extends BaseRepositoryTest
     public function _before()
     {
         $this->tester->haveFixtures([
-            'employee' => EmployeeFixure::class,
-            'employee_phone' => EmployeePhoneFixure::class,
-            'employee_status' => EmployeeStatusFixure::class,
+            'employee' => EmployeeFixture::class,
+            'employee_phone' => EmployeePhoneFixture::class,
+            'employee_status' => EmployeeStatusFixture::class,
         ]);
 
         $this->repository = new AREmployeeRepository();
